@@ -9,32 +9,10 @@ namespace Ex03.GarageLogic
     public class Garage
     {
         List<RepairedVehicle> m_CurrentGarageVehicles;
-        List<Vehicle> m_AllowedVehiclesTypes;
 
-        public Garage(List<Vehicle> i_AllowedVehiclesTypes)
+        public Garage()
         {
-            m_AllowedVehiclesTypes = new List<Vehicle>();
-            foreach (Vehicle validVehicle in i_AllowedVehiclesTypes)
-            {
-                this.m_AllowedVehiclesTypes.Add(validVehicle);
-            }
         }
-
-        /*        public bool IsVehicleExists(string i_LicenceNumber) 
-                {
-                    bool isVechileExistsInGarage = false;
-
-                    foreach (RepairedVehicle repairedVehicleToCheckWith in this.m_CurrentGarageVehicles)
-                    {
-                        if (repairedVehicleToCheckWith.Vehicle.LicenseNumber == i_LicenceNumber)
-                        {
-                            isVechileExistsInGarage = true;
-                            break;
-                        }
-                    }
-
-                    return isVechileExistsInGarage;
-                }*/
 
         public RepairedVehicle GetRepairedVehicleByLiecenceNumber(string i_LicenceNumber)
         {
@@ -79,6 +57,14 @@ namespace Ex03.GarageLogic
             }
 
             return isVehicleExistsInGarage;
+        }
+
+        public void InflateVehicleWheelsToMaximum(RepairedVehicle i_VehicleToInflate)
+        {
+            foreach (RepairedVehicle repairedVehicleToCheckWith in this.m_CurrentGarageVehicles)
+            {
+                if (re)
+            }
         }
 
         public string[] GetAllVehiclesLieceneNumbers()

@@ -8,7 +8,8 @@ namespace Ex03.GarageLogic
 {
     public class GarageController
     {
-        Garage m_ControlledGarage;
+        private Garage m_ControlledGarage;
+        private static List<Vehicle> m_AllowedVehiclesTypes;
 
         public GarageController()
         {
@@ -20,7 +21,28 @@ namespace Ex03.GarageLogic
             allowedVehiclesTypes.Add(Car.CreateFuelCar(29f, 48f, eFuelType.Octan95));
             allowedVehiclesTypes.Add(Car.CreateElectricCar(29f, 2.6f));
             allowedVehiclesTypes.Add(Truck.CreateTruck(25f, 130f, eFuelType.Soler));
-            this.m_ControlledGarage = new Garage(allowedVehiclesTypes);
+            m_AllowedVehiclesTypes = allowedVehiclesTypes;
+            this.m_ControlledGarage = new Garage();
+        }
+
+        private bool isAllowedVehicle(Vehicle i_VehicleToCheck) 
+        {
+            bool isAllowedVehicle = false;
+
+            foreach (Vehicle allowedVehicle in m_AllowedVehiclesTypes)
+            {
+                if (i_VehicleToCheck.GetType() == allowedVehicle.GetType()) 
+                {
+                    i_VehicleToCheck.Engine.GetType();
+                    if (i_VehicleToCheck.GetWheelMaxAirPressureSetByTheManufacturer() == allowedVehicle.GetWheelMaxAirPressureSetByTheManufacturer() && i_VehicleToCheck.Engine.Equals(allowedVehicle.Engine))
+                    {
+                        isAllowedVehicle = true;
+                        break;
+                    }
+                }
+            }
+
+            return isAllowedVehicle;
         }
 
         public bool InsertVehicleToGarage(Vehicle i_VehicleToRepair, string i_OwnerName, string i_OwnerPhone)
@@ -41,25 +63,27 @@ namespace Ex03.GarageLogic
             return this.m_ControlledGarage.GetVehiclesLicenseNumbersByRepairStatus(i_RepairStatusToFilterBy);
         }
 
-        public bool ChangeVehicleRepairStatus(string i_LicenseNumber, eVehicleRepairStatus i_NewRepairStatus)
+        public void ChangeVehicleRepairStatus(string i_LicenseNumber, eVehicleRepairStatus i_NewRepairStatus)
         {
-            bool doesVehicleExistInGarage = true;
-            RepairedVehicle repairedVehicleInGarage = this.m_ControlledGarage.GetRepairedVehicleByLiecenceNumber(i_LicenseNumber);
+            RepairedVehicle vehicleToChangeRepairStatus = this.m_ControlledGarage.GetRepairedVehicleByLiecenceNumber(i_LicenseNumber);
 
-            if (repairedVehicleInGarage == null)
+            if (vehicleToChangeRepairStatus == null)
             {
-                doesVehicleExistInGarage = false;
+                throw new NullReferenceException(String.Format("vehclie with liecence number {0} does not exists in garage", i_LicenseNumber)); 
             }
-            else
-            {
-                this.m_ControlledGarage.UpdateRepairedVehicleStatusIfExists(repairedVehicleInGarage.Vehicle, i_NewRepairStatus);
-            }
-
-            return doesVehicleExistInGarage;
+            
+            this.m_ControlledGarage.UpdateRepairedVehicleStatusIfExists(vehicleToChangeRepairStatus.Vehicle, i_NewRepairStatus);
         }
 
         public void InflateVehicleWheelsToMaximum(string i_LicenseNumber)
         {
+            RepairedVehicle repairedVehicleInGarage = this.m_ControlledGarage.GetRepairedVehicleByLiecenceNumber(i_LicenseNumber);
+
+            if (repairedVehicleInGarage == null)
+            {
+                throw new NullReferenceException(String.Format("vehclie with liecence number {0} does not exists in garage", i_LicenseNumber));
+            }
+
 
         }
 

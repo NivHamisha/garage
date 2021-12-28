@@ -53,7 +53,7 @@ namespace Ex03.GarageLogic
             this.m_MaxAirPressureSetByTheManufacturer = i_WheelMaxAirPressureSetByTheManufacturer;
         }
 
-        public void InflateWheel(float i_AirPressureToAdd)
+        public void InflateWheelToMaximum()
         {
             //here add function implementation
         }
