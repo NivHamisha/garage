@@ -6,52 +6,38 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    public abstract class Engine
+    public class Engine : PowerUnit
     {
-        private float m_CurrentEnergyRate;
-        private float m_MaxEnergyRate;
+        #region Data Members
+        private eFuelType m_FuelType;
+        #endregion
 
-        protected float CurrentEnergyRate
+        #region Properties
+        public eFuelType FuelType
         {
             get
             {
-                return this.m_CurrentEnergyRate;
-            }
-            set
-            {
-                this.m_CurrentEnergyRate = value;
+                return m_FuelType;
             }
         }
+        #endregion
 
-        protected float MaxEnergyRate
+        #region Constructor
+        public Engine(float i_MaxEnergyRate, eFuelType i_FuelType) : base(i_MaxEnergyRate)
         {
-            get
-            {
-                return this.m_MaxEnergyRate;
-            }
-            set
-            {
-                this.m_MaxEnergyRate = value;
-            }
+            this.m_FuelType = i_FuelType;
         }
+        #endregion
 
-        public Engine(float i_MaxEnergyRate)
+        #region Methods
+        public void Refuel(eFuelType i_EngineFuelType, float i_FuelAmountToAddInLiters)
         {
-            this.m_CurrentEnergyRate = 0;
-            this.m_MaxEnergyRate = i_MaxEnergyRate;
-        }
-
-        protected void loadEnergy(float i_EnergyToAdd)
-        {
-            if (i_EnergyToAdd > 0 && m_CurrentEnergyRate + i_EnergyToAdd <= m_MaxEnergyRate)
+            if (this.m_FuelType != i_EngineFuelType)
             {
-                m_CurrentEnergyRate += i_EnergyToAdd;
-                // todo calculate precentage (at Vhicle members)
+                throw new ArgumentException("can't refuel engine, fuel type doen't match");
             }
-            else
-            {
-                throw new ValueOutOfRangeException();
-            }
+            base.loadEnergy(i_FuelAmountToAddInLiters);
         }
+        #endregion
     }
 }

@@ -8,12 +8,17 @@ namespace Ex03.GarageLogic
 {
     public class Garage
     {
+        #region Data Members
         List<RepairedVehicle> m_CurrentGarageVehicles;
+        #endregion
 
+        #region Constructor
         public Garage()
         {
         }
+        #endregion
 
+        #region Public Methods
         public RepairedVehicle GetRepairedVehicleByLiecenceNumber(string i_LicenceNumber)
         {
             RepairedVehicle repairedVehicle = null;
@@ -30,18 +35,15 @@ namespace Ex03.GarageLogic
             return repairedVehicle;
         }
 
-        public bool UpdateRepairedVehicleStatusIfExists(Vehicle i_VehicleToUpdateRepairStatus, eVehicleRepairStatus i_StatusToUpdateTo)
+        public bool UpdateRepairedVehicleStatusIfExists(RepairedVehicle i_RepairedVehicleToUpdateRepairStatus, eVehicleRepairStatus i_StatusToUpdateTo)
         {
             bool isUpdated = false;
+            int repairVehicleIndex = this.m_CurrentGarageVehicles.IndexOf(i_RepairedVehicleToUpdateRepairStatus);
 
-            foreach (RepairedVehicle repairedVehicleToCheckWith in this.m_CurrentGarageVehicles)
+            if (repairVehicleIndex >= 0)
             {
-                if (repairedVehicleToCheckWith.Vehicle.LicenseNumber == i_VehicleToUpdateRepairStatus.LicenseNumber)
-                {
-                    isUpdated = true;
-                    repairedVehicleToCheckWith.VehicleStatus = eVehicleRepairStatus.InRepair;
-                    break;
-                }
+                isUpdated = true;
+                this.m_CurrentGarageVehicles[repairVehicleIndex].VehicleStatus = eVehicleRepairStatus.InRepair;
             }
 
             return isUpdated;
@@ -49,7 +51,7 @@ namespace Ex03.GarageLogic
 
         public bool EnsureVehicleRepairInGarage(RepairedVehicle i_VehicleToEnsureRepairing)
         {
-            bool isVehicleExistsInGarage = this.UpdateRepairedVehicleStatusIfExists(i_VehicleToEnsureRepairing.Vehicle, eVehicleRepairStatus.InRepair);
+            bool isVehicleExistsInGarage = this.UpdateRepairedVehicleStatusIfExists(i_VehicleToEnsureRepairing, eVehicleRepairStatus.InRepair);
 
             if (!isVehicleExistsInGarage)
             {
@@ -61,9 +63,11 @@ namespace Ex03.GarageLogic
 
         public void InflateVehicleWheelsToMaximum(RepairedVehicle i_VehicleToInflate)
         {
-            foreach (RepairedVehicle repairedVehicleToCheckWith in this.m_CurrentGarageVehicles)
+            int repairVehicleToInflate = this.m_CurrentGarageVehicles.IndexOf(i_VehicleToInflate);
+
+            if (repairVehicleToInflate >= 0)
             {
-                if (re)
+                this.m_CurrentGarageVehicles[repairVehicleToInflate].Vehicle.InflateVehicleWheelsToMaximum();
             }
         }
 
@@ -93,6 +97,60 @@ namespace Ex03.GarageLogic
             return vehiclesLieceneNumbers;
         }
 
+        public void RefuelVehicle(RepairedVehicle repairedVehicleToRefuel, eFuelType i_FuelTypeToFill, float i_FuelAmountToFill)
+        {
+            Engine repairVehicleEngineToRefuel = repairedVehicleToRefuel.Vehicle.PowerUnit as Engine;
+
+            if (repairVehicleEngineToRefuel == null)
+            {
+                throw new ArgumentException("can't refuel vehicle, power unit not engine type");
+            }
+
+            repairVehicleEngineToRefuel.Refuel(i_FuelTypeToFill, i_FuelAmountToFill);
+            repairedVehicleToRefuel.Vehicle.UpdateRemainingPrecentageOfEnergy();
+        }
+
+        public void ChargeVehicle(RepairedVehicle repairedVehicleToCharge, float i_BatteryTimeToAddInMinutes)
+        {
+            Battery repairVehicleBatteryToCharge = repairedVehicleToCharge.Vehicle.PowerUnit as Battery;
+
+            if (repairVehicleBatteryToCharge == null)
+            {
+                throw new ArgumentException("can't charge vehicle, power unit not battery type");
+            }
+
+            repairVehicleBatteryToCharge.Charge(i_BatteryTimeToAddInMinutes / 60);
+            repairedVehicleToCharge.Vehicle.UpdateRemainingPrecentageOfEnergy();
+        }
+
+        public static bool IsVehicleEqualType(Vehicle i_VehicleToCheckWith, Vehicle i_VehicleToCompareTo)
+        {
+            bool doesVehiclesHaveEqualTypes = false;
+            bool vehiclesHasEqualEngins = isVehiclesHasEqualPowerUnits(i_VehicleToCheckWith, i_VehicleToCompareTo);
+            bool vehiclesHasEqualWheelMaxAirPressure = i_VehicleToCheckWith.GetWheelMaxAirPressureSetByTheManufacturer() == i_VehicleToCompareTo.GetWheelMaxAirPressureSetByTheManufacturer();
+
+            if (vehiclesHasEqualWheelMaxAirPressure && vehiclesHasEqualEngins)
+            {
+                doesVehiclesHaveEqualTypes = true;
+            }
+
+            return doesVehiclesHaveEqualTypes;
+        }
+        #endregion
+
+        #region Private Methods
+        private static bool isVehiclesHasEqualPowerUnits(Vehicle i_VehicleToCheckWith, Vehicle i_VehicleToCompareTo)
+        {
+            bool vehiclesHasEqualEngins = false;
+
+            if (i_VehicleToCheckWith.GetType() == i_VehicleToCompareTo.GetType())
+            {
+                vehiclesHasEqualEngins = i_VehicleToCheckWith.PowerUnit == i_VehicleToCompareTo.PowerUnit;
+            }
+
+            return vehiclesHasEqualEngins;
+        }
+
         private List<RepairedVehicle> getVehiclesfilteredByRepairStatus(eVehicleRepairStatus i_RepairStatusToFilterBy)
         {
             List<RepairedVehicle> repairedVehiclesWithStatusFilter = new List<RepairedVehicle>();
@@ -107,5 +165,6 @@ namespace Ex03.GarageLogic
 
             return repairedVehiclesWithStatusFilter;
         }
+        #endregion
     }
 }

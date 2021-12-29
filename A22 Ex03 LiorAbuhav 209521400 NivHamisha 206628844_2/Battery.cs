@@ -6,15 +6,19 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    public class ElectricEngine : Engine
+    public class Battery : PowerUnit
     {
-        public ElectricEngine(float i_MaxBatteryTimeInHours) : base(i_MaxBatteryTimeInHours)
+        #region Constructor
+        public Battery(float i_MaxBatteryTimeInHours) : base(i_MaxBatteryTimeInHours)
         {
         }
+        #endregion
+
+        #region Methods
         public void Charge(float i_HoursToAdd)
         {
             base.loadEnergy(i_HoursToAdd);
         }
-
+        #endregion
     }
 }

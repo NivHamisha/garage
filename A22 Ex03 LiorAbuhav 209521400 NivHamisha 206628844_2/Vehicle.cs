@@ -8,12 +8,15 @@ namespace Ex03.GarageLogic
 {
     public abstract class Vehicle
     {
+        #region Data Members
         private string m_ModelName;
         private string m_LicenseNumber;
         private float m_RemainingPrecentageOfEnergy;
         private List<Wheel> m_Wheels;
-        private Engine m_Engine;
+        private PowerUnit m_PowerUnit;
+        #endregion
 
+        #region Properties
         public string ModelName
         {
             get
@@ -44,10 +47,6 @@ namespace Ex03.GarageLogic
             {
                 return this.m_RemainingPrecentageOfEnergy;
             }
-            set
-            {
-                this.m_RemainingPrecentageOfEnergy = value;
-            }
         }
 
         public List<Wheel> Wheels
@@ -67,18 +66,58 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public Engine Engine
+        public PowerUnit PowerUnit
         {
             get
             {
-                return this.m_Engine;
+                return this.m_PowerUnit;
             }
             set
             {
-                this.m_Engine = value;
+                this.m_PowerUnit = value;
             }
         }
+        #endregion
 
+        #region Overrides
+        public override int GetHashCode()
+        {
+            return this.m_LicenseNumber.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            bool equals = false;
+            Vehicle toCompateTo = obj as Vehicle;
+
+            if (toCompateTo != null) 
+            {
+                equals = this.LicenseNumber == toCompateTo.LicenseNumber;
+            }
+
+            return equals;
+        }
+
+        public static bool operator ==(Vehicle i_LeftVehicleToOperand, Vehicle i_RightVehicleToOperand) 
+        {
+            bool areVehiclesEqual;
+
+            if (i_LeftVehicleToOperand is null && i_RightVehicleToOperand is null)
+            {
+                areVehiclesEqual = true;
+            }
+            else 
+            {
+                areVehiclesEqual = i_LeftVehicleToOperand.Equals(i_RightVehicleToOperand);
+            }
+
+            return areVehiclesEqual;
+        }
+
+        public static bool operator !=(Vehicle i_LeftVehicleToOperand, Vehicle i_RightVehicleToOperand) => !(i_LeftVehicleToOperand == i_RightVehicleToOperand);
+        #endregion
+
+        #region Constructor 
         public Vehicle(float i_WheelMaxAirPressureSetByTheManufacturer, string i_WheelManufacturerName = null, eWheelsCount i_WheelsCount = default(eWheelsCount), string i_ModelName = null, string i_LicenseNumber = null)
         {
             this.m_ModelName = i_ModelName ?? string.Empty;
@@ -86,7 +125,30 @@ namespace Ex03.GarageLogic
             this.m_RemainingPrecentageOfEnergy = 0;
             this.m_Wheels = this.getWheelsList(i_WheelMaxAirPressureSetByTheManufacturer, i_WheelsCount, i_WheelManufacturerName);
         }
+        #endregion
 
+        #region Public Methods
+        public float GetWheelMaxAirPressureSetByTheManufacturer()
+        {
+            Wheel vehicleWheel = this.Wheels.First();
+            return vehicleWheel.MaxAirPressureSetByTheManufacturer;
+        }
+
+        public void InflateVehicleWheelsToMaximum()
+        {
+            foreach (Wheel wheelToInflate in this.m_Wheels)
+            {
+                wheelToInflate.InflateWheelToMaximum();
+            }
+        }
+
+        public void UpdateRemainingPrecentageOfEnergy()
+        {
+            this.m_RemainingPrecentageOfEnergy = this.PowerUnit.GetEnergyRatio();
+        }
+        #endregion
+
+        #region Private Methods
         private List<Wheel> getWheelsList(float i_WheelMaxAirPressureSetByTheManufacturer, eWheelsCount i_WheelsCount, string i_WheelManufacturerName = null)
         {
             List<Wheel> wheels = new List<Wheel>();
@@ -98,17 +160,6 @@ namespace Ex03.GarageLogic
 
             return wheels;
         }
-
-        public float GetWheelMaxAirPressureSetByTheManufacturer() 
-        {
-            Wheel vehicleWheel = this.Wheels.First();
-            return vehicleWheel.MaxAirPressureSetByTheManufacturer;
-        }
-
-/*        public void InflateVehicleWheels() 
-        {
-            for (int i = 0; i < (int)_WheelsCount; i++)
-            {
-        }*/
+        #endregion
     }
 }

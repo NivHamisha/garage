@@ -8,10 +8,13 @@ namespace Ex03.GarageLogic
 {
     public class Wheel
     {
+        #region Data Members
         private string m_ManufacturerName;
         private float m_CurrentAirPressure = 0;
         private float m_MaxAirPressureSetByTheManufacturer;
+        #endregion
 
+        #region Properties
         public string ManufacturerName
         {
             get
@@ -23,6 +26,7 @@ namespace Ex03.GarageLogic
                 this.m_ManufacturerName = value;
             }
         }
+
         public float CurrentAirPressure
         {
             get
@@ -34,6 +38,7 @@ namespace Ex03.GarageLogic
                 this.m_CurrentAirPressure = value;
             }
         }
+
         public float MaxAirPressureSetByTheManufacturer
         {
             get
@@ -45,17 +50,22 @@ namespace Ex03.GarageLogic
                 this.MaxAirPressureSetByTheManufacturer = value;
             }
         }
+        #endregion
 
+        #region Constructor
         public Wheel(float i_WheelMaxAirPressureSetByTheManufacturer, string i_WheelManufacturerName = null)
         {
             this.m_ManufacturerName = i_WheelManufacturerName ?? "default";
             this.m_ManufacturerName = i_WheelManufacturerName;
             this.m_MaxAirPressureSetByTheManufacturer = i_WheelMaxAirPressureSetByTheManufacturer;
         }
+        #endregion
 
+        #region Methods
         public void InflateWheelToMaximum()
         {
-            //here add function implementation
+            this.m_CurrentAirPressure = this.m_MaxAirPressureSetByTheManufacturer;
         }
+        #endregion
     }
 }

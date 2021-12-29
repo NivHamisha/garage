@@ -8,9 +8,12 @@ namespace Ex03.GarageLogic
 {
     public class Motorcycle : Vehicle
     {
+        #region Data Members
         private eLicenseType m_LicenseType;
         private int m_EngineCapacity;
+        #endregion
 
+        #region Properties
         public eLicenseType LicenseType
         {
             get
@@ -22,33 +25,38 @@ namespace Ex03.GarageLogic
                 this.m_LicenseType = value;
             }
         }
+        #endregion
 
+        #region Private Constructor
         private Motorcycle(float i_WheelMaxAirPressureSetByTheManufacturer, string i_ModelName, string i_LicenseNumber,
-            string i_WheelManufacturerName, int i_EngineCapacity, eLicenseType i_MotorcycleLicenseType, Engine i_MotorcycleEngine)
+            string i_WheelManufacturerName, int i_EngineCapacity, eLicenseType i_MotorcycleLicenseType, PowerUnit i_MotorcycleEngine)
             : base(i_WheelMaxAirPressureSetByTheManufacturer, i_WheelManufacturerName, eWheelsCount.Two, i_ModelName, i_LicenseNumber)
         {
             this.m_EngineCapacity = i_EngineCapacity;
             this.m_LicenseType = i_MotorcycleLicenseType;
         }
+        #endregion
 
+        #region Static Methods
         public static Motorcycle CreateFuelMotorcycle(float i_WheelMaxAirPressureSetByTheManufacturer, float i_EngineFuelAmountToAddInLiters,
             eFuelType i_EngineFuelType, string i_ModelName = null, string i_LicenseNumber = null, string i_WheelManufacturerName = null,
             int i_EngineCapacity = 0, eLicenseType i_MotorcycleLicenseType = default(eLicenseType))
         {
-            FuelEngine fuelEngine = new FuelEngine(i_EngineFuelAmountToAddInLiters, i_EngineFuelType);
+            Engine engine = new Engine(i_EngineFuelAmountToAddInLiters, i_EngineFuelType);
 
             return new Motorcycle(i_WheelMaxAirPressureSetByTheManufacturer, i_ModelName, i_LicenseNumber, i_WheelManufacturerName,
-                i_EngineCapacity, i_MotorcycleLicenseType, fuelEngine);
+                i_EngineCapacity, i_MotorcycleLicenseType, engine);
         }
 
         public static Motorcycle CreateElectricMotorcycle(float i_WheelMaxAirPressureSetByTheManufacturer, float i_MaxBatteryTimeInHours,
             string i_ModelName = null, string i_LicenseNumber = null, string i_WheelManufacturerName = null, int i_EngineCapacity = 0,
             eLicenseType i_MotorcycleLicenseType = default(eLicenseType))
         {
-            ElectricEngine electricEngine = new ElectricEngine(i_MaxBatteryTimeInHours);
+            Battery battery = new Battery(i_MaxBatteryTimeInHours);
 
             return new Motorcycle(i_WheelMaxAirPressureSetByTheManufacturer, i_ModelName, i_LicenseNumber, i_WheelManufacturerName,
-                i_EngineCapacity, i_MotorcycleLicenseType, electricEngine);
+                i_EngineCapacity, i_MotorcycleLicenseType, battery);
         }
+        #endregion
     }
 }

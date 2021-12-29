@@ -8,8 +8,12 @@ namespace Ex03.GarageLogic
 {
     public class Car : Vehicle
     {
+        #region Data Members
         private eColor m_CarColor;
         private eDoorsNumber m_DoorsNumber;
+        #endregion
+
+        #region Properties
         public eColor CarColor
         {
             get
@@ -21,6 +25,7 @@ namespace Ex03.GarageLogic
                 this.m_CarColor = value;
             }
         }
+
         public eDoorsNumber DoorsNumber
         {
             get
@@ -32,35 +37,40 @@ namespace Ex03.GarageLogic
                 this.m_DoorsNumber = value;
             }
         }
+        #endregion
 
+        #region Private Constructor
         private Car(float i_WheelMaxAirPressureSetByTheManufacturer, string i_ModelName, string i_LicenseNumber,
-            string i_WheelManufacturerName, eColor i_CarColor, eDoorsNumber i_DoorsNumber, Engine i_carEngine)
+            string i_WheelManufacturerName, eColor i_CarColor, eDoorsNumber i_DoorsNumber, PowerUnit i_carEngine)
             : base(i_WheelMaxAirPressureSetByTheManufacturer, i_WheelManufacturerName, eWheelsCount.Four, i_ModelName, i_LicenseNumber)
         {
             this.m_DoorsNumber = i_DoorsNumber;
             this.m_CarColor = i_CarColor;
-            base.Engine = i_carEngine;
+            base.PowerUnit = i_carEngine;
         }
+        #endregion
 
+        #region Static Methods
         public static Car CreateFuelCar(float i_WheelMaxAirPressureSetByTheManufacturer, float i_EngineFuelAmountToAddInLiters,
             eFuelType i_EngineFuelType, string i_ModelName = null, string i_LicenseNumber = null,
             string i_WheelManufacturerName = null, eColor i_CarColor = default(eColor),
             eDoorsNumber i_DoorsNumber = default(eDoorsNumber))
         {
-            FuelEngine fuelEngine = new FuelEngine(i_EngineFuelAmountToAddInLiters, i_EngineFuelType);
+            Engine engine = new Engine(i_EngineFuelAmountToAddInLiters, i_EngineFuelType);
 
             return new Car(i_WheelMaxAirPressureSetByTheManufacturer, i_ModelName, i_LicenseNumber, i_WheelManufacturerName,
-                i_CarColor, i_DoorsNumber, fuelEngine);
+                i_CarColor, i_DoorsNumber, engine);
         }
 
         public static Car CreateElectricCar(float i_WheelMaxAirPressureSetByTheManufacturer, float i_MaxBatteryTimeInHours,
             string i_ModelName = null, string i_LicenseNumber = null, string i_WheelManufacturerName = null,
             eColor i_CarColor = default(eColor), eDoorsNumber i_DoorsNumber = default(eDoorsNumber))
         {
-            ElectricEngine electricEngine = new ElectricEngine(i_MaxBatteryTimeInHours);
+            Battery battery = new Battery(i_MaxBatteryTimeInHours);
 
             return new Car(i_WheelMaxAirPressureSetByTheManufacturer, i_ModelName, i_LicenseNumber, i_WheelManufacturerName,
-                i_CarColor, i_DoorsNumber, electricEngine);
+                i_CarColor, i_DoorsNumber, battery);
         }
+        #endregion
     }
 }
